@@ -2,7 +2,9 @@
 
 import numpy as np
 import numpy.testing as npt
+import pytest
 from unittest.mock import patch
+
 
 def test_daily_mean_zeros():
     """Test that mean function works for an array of zeros."""
@@ -40,5 +42,26 @@ def test_load_csv(mock_get_data_dir):
         name, args, kwargs = mock_loadtxt.mock_calls[1]
         assert kwargs['fname'] == '/test.csv'
 
+
+@pytest.mark.parametrize(
+    "test,expected",
+    [
+        ([[1,2],[-12,7],[3,4],[-10,4]],[3,7])
+    ]
+)
+def test_daily_max(test,expected):
+    ''' Test that daily_max()works for a 2D array of positive integers'''
+    from inflammation.models import daily_max
+    npt.assert_array_equal(np.array(expected), daily_max(np.array(test)))
+
+def test_daily_min():
+    ''' Test that daily_min() works for a 2D array of positive integers'''
+    from inflammation.models import daily_min
+
+    test_array = ([[2, 4],
+                   [1,8],
+                   [10,2]])
+        
+    npt.assert_array_equal(np.array([1,2]),daily_min(test_array))
 # TODO(lesson-automatic) Implement tests for the other statistical functions
 # TODO(lesson-mocking) Implement a unit test for the load_csv function
